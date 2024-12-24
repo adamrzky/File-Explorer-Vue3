@@ -3,73 +3,113 @@ import { getFilesByFolder, addFile, deleteFile, updateFile } from '../controller
 
 const app = new Elysia();
 
-app.get('/api/files', async (ctx) => {
+app.get('/api/v1/files', async (ctx) => {
   try {
     const folderId = parseInt(ctx.query.folder_id);
     if (!folderId) {
       ctx.status = 400;
-      return { message: 'folder_id harus disertakan' };
+      return {
+        success: false,
+        message: 'folder_id harus disertakan',
+      };
     }
 
     const files = await getFilesByFolder(folderId);
-    return files;
+    return {
+      success: true,
+      data: files,
+      message: 'Files fetched successfully',
+    };
   } catch (error) {
-    console.error(error);
+    console.error('Error:', error);
     ctx.status = 500;
-    return { message: 'Gagal mengambil file dari folder' };
+    return {
+      success: false,
+      message: 'Gagal mengambil file dari folder',
+    };
   }
 });
 
-app.post('/api/files', async (ctx) => {
+app.post('/api/v1/files', async (ctx) => {
   try {
     const { name, file_type, folder_id } = ctx.body;
     if (!name || !file_type || !folder_id) {
       ctx.status = 400;
-      return { message: 'name, file_type, dan folder_id harus disertakan' };
+      return {
+        success: false,
+        message: 'name, file_type, dan folder_id harus disertakan',
+      };
     }
 
     const file = await addFile(name, file_type, parseInt(folder_id));
-    ctx.status = 201;
-    return file;
+    ctx.status = 201; 
+    return {
+      success: true,
+      data: file,
+      message: 'File added successfully',
+    };
   } catch (error) {
-    console.error(error);
+    console.error('Error:', error);
     ctx.status = 500;
-    return { message: 'Gagal menambahkan file' };
+    return {
+      success: false,
+      message: 'Gagal menambahkan file',
+    };
   }
 });
 
-app.delete('/api/files/:id', async (ctx) => {
+app.delete('/api/v1/files/:id', async (ctx) => {
   try {
     const fileId = parseInt(ctx.params.id);
     if (!fileId) {
       ctx.status = 400;
-      return { message: 'file_id harus disertakan' };
+      return {
+        success: false,
+        message: 'file_id harus disertakan',
+      };
     }
 
     const result = await deleteFile(fileId);
-    return result;
+    return {
+      success: true,
+      data: result,
+      message: 'File deleted successfully',
+    };
   } catch (error) {
-    console.error(error);
+    console.error('Error:', error);
     ctx.status = 500;
-    return { message: 'Gagal menghapus file' };
+    return {
+      success: false,
+      message: 'Gagal menghapus file',
+    };
   }
 });
 
-app.put('/api/files/:id', async (ctx) => {
+app.put('/api/v1/files/:id', async (ctx) => {
   try {
     const fileId = parseInt(ctx.params.id);
     const { name, file_type } = ctx.body;
     if (!name || !file_type) {
       ctx.status = 400;
-      return { message: 'name dan file_type harus disertakan' };
+      return {
+        success: false,
+        message: 'name dan file_type harus disertakan',
+      };
     }
 
     const file = await updateFile(fileId, name, file_type);
-    return file;
+    return {
+      success: true,
+      data: file,
+      message: 'File updated successfully',
+    };
   } catch (error) {
-    console.error(error);
+    console.error('Error:', error);
     ctx.status = 500;
-    return { message: 'Gagal memperbarui file' };
+    return {
+      success: false,
+      message: 'Gagal memperbarui file',
+    };
   }
 });
 
