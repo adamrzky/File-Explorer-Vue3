@@ -1,20 +1,67 @@
 import { Database } from "../models/folderModel";
 
-export const getFilesByFolder = async (folderId: number) => {
+export const getFilesByFolder = async (
+  folderId: number,
+  limit?: number,
+  offset?: number,
+  search?: string
+) => {
   try {
-    const [rows] = await Database.query(
-      `
-      SELECT id, name, file_type, folder_id, created_at, updated_at
+    let query = `
+      SELECT id, name, file_type, folder_id
       FROM files
       WHERE folder_id = ?
-    `,
-      [folderId]
-    );
+    `;
+
+    if (search) {
+      query += ` AND name LIKE ?`;
+    }
+
+    query += ` LIMIT ? OFFSET ?`;
+
+    const params: any[] = [folderId];
+    if (search) {
+      params.push(`%${search}%`);
+    }
+    params.push(limit || 10, offset || 0);
+
+    const [rows] = await Database.query(query, params);
 
     return rows;
   } catch (error) {
     console.error(error);
     throw new Error("Gagal mengambil file dari folder");
+  }
+};
+
+export const getFilesAnyFolder = async (
+  limit?: number,
+  offset?: number,
+  search?: string
+) => {
+  try {
+    let query = `
+      SELECT id, name, file_type, folder_id
+      FROM files
+      WHERE 1 = 1
+    `;
+
+    const params: any[] = [];
+
+    if (search) {
+      query += ` AND name LIKE ?`;
+      params.push(`%${search}%`);
+    }
+
+    query += ` LIMIT ? OFFSET ?`;
+    params.push(limit || 50, offset || 0); // Default: limit = 50, offset = 0
+
+    const [rows] = await Database.query(query, params);
+
+    return rows;
+  } catch (error) {
+    console.error(error);
+    throw new Error("Gagal mengambil file dari semua folder");
   }
 };
 
