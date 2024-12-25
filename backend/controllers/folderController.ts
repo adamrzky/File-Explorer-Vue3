@@ -22,3 +22,24 @@ export const getFolderStructure = async () => {
     throw new Error('Gagal mengambil struktur folder');
   }
 };
+
+
+export const getSubFolders = async (parent_id) => {
+  try {
+    const query = `
+      SELECT id, name, parent_id
+      FROM folders
+      WHERE parent_id = ?
+    `;
+    const [rows] = await Database.query(query, [parent_id]);
+
+    if (!rows) {
+      throw new Error('Subfolders not found');
+    }
+
+    return rows;
+  } catch (error) {
+    console.error('Error fetching subfolders:', error);
+    throw new Error('Failed to fetch subfolders');
+  }
+};
