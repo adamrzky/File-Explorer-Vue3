@@ -1,12 +1,11 @@
 <template>
   <div class="file-explorer">
     <folder-list :folders="folders" @select-folder="selectFolder" />
-    <folder-details :selectedFolder="selectedFolder" />
+    <folder-details :selectedFolder="selectedFolder" :load-folder-details="loadFolderDetails" />
   </div>
 </template>
 
 <script>
-import SearchBar from './components/SearchBar.vue'
 import FolderList from './components/FolderList.vue'
 import FolderDetails from './components/FolderDetails.vue'
 import { ref, onMounted } from 'vue'
@@ -16,8 +15,8 @@ export default {
   components: {
     FolderList,
     FolderDetails,
-    SearchBar
   },
+
   setup() {
     const folders = ref([])
     const selectedFolder = ref(null)
@@ -38,15 +37,15 @@ export default {
       const rootFolders = []
 
       foldersData.forEach((folder) => {
-        folder.children = []
+        folder.children = [] 
         folderLookup[folder.id] = folder
-        if (folder.parent_id === null) {
-          rootFolders.push(folder)
+      })
+
+      foldersData.forEach((folder) => {
+        if (folder.parent_id) {
+          folderLookup[folder.parent_id].children.push(folder)
         } else {
-          const parent = folderLookup[folder.parent_id]
-          if (parent) {
-            parent.children.push(folder)
-          }
+          rootFolders.push(folder)
         }
       })
 
@@ -57,18 +56,34 @@ export default {
       selectedFolder.value = folder
     }
 
+    const loadFolderDetails = async (folderId) => {
+      try {
+        const response = await axios.get(`/api/v1/folders/${folderId}`)
+        if (response.status === 200 && response.data.success) {
+          selectedFolder.value = { ...selectedFolder.value, children: response.data.data }
+
+          return response.data
+        } else {
+          console.error('Failed to fetch folder details:', response.statusText)
+          return null
+        }
+      } catch (error) {
+        console.error('Error fetching folder details:', error)
+        return null
+      }
+    }
+
     onMounted(fetchFolders)
 
     return {
       folders,
       selectedFolder,
       selectFolder,
+      loadFolderDetails,
     }
   },
 }
 </script>
-
-
 
 <style>
 html,
