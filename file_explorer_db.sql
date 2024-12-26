@@ -11,7 +11,7 @@
  Target Server Version : 80030 (8.0.30)
  File Encoding         : 65001
 
- Date: 25/12/2024 10:49:05
+ Date: 26/12/2024 18:26:19
 */
 
 SET NAMES utf8mb4;
@@ -31,7 +31,7 @@ CREATE TABLE `files`  (
   PRIMARY KEY (`id`) USING BTREE,
   INDEX `idx_folder_id`(`folder_id` ASC) USING BTREE,
   CONSTRAINT `files_ibfk_1` FOREIGN KEY (`folder_id`) REFERENCES `folders` (`id`) ON DELETE CASCADE ON UPDATE RESTRICT
-) ENGINE = InnoDB AUTO_INCREMENT = 15 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_0900_ai_ci ROW_FORMAT = Dynamic;
+) ENGINE = InnoDB AUTO_INCREMENT = 17 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_0900_ai_ci ROW_FORMAT = DYNAMIC;
 
 -- ----------------------------
 -- Records of files
@@ -50,6 +50,8 @@ INSERT INTO `files` VALUES (11, 'CodeSnippet.js', '.js', 6, '2024-12-24 14:16:48
 INSERT INTO `files` VALUES (12, 'Contract.pdf', '.pdf', 1, '2024-12-24 14:16:48', '2024-12-24 14:16:48');
 INSERT INTO `files` VALUES (13, 'NewFile.txt', '.txt', 2, '2024-12-24 23:28:09', '2024-12-24 23:28:09');
 INSERT INTO `files` VALUES (14, 'NewFile.txt', '.txt', 1, '2024-12-25 00:47:47', '2024-12-25 00:47:47');
+INSERT INTO `files` VALUES (15, 'Inproject.txt', '.txt', 26, '2024-12-26 13:19:08', '2024-12-26 13:19:08');
+INSERT INTO `files` VALUES (16, 'Inproject2.txt', '.txt', 27, '2024-12-26 13:19:08', '2024-12-26 13:19:08');
 
 -- ----------------------------
 -- Table structure for folders
@@ -64,7 +66,7 @@ CREATE TABLE `folders`  (
   PRIMARY KEY (`id`) USING BTREE,
   INDEX `idx_parent_id`(`parent_id` ASC) USING BTREE,
   CONSTRAINT `folders_ibfk_1` FOREIGN KEY (`parent_id`) REFERENCES `folders` (`id`) ON DELETE CASCADE ON UPDATE RESTRICT
-) ENGINE = InnoDB AUTO_INCREMENT = 25 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_0900_ai_ci ROW_FORMAT = Dynamic;
+) ENGINE = InnoDB AUTO_INCREMENT = 29 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_0900_ai_ci ROW_FORMAT = DYNAMIC;
 
 -- ----------------------------
 -- Records of folders
@@ -93,5 +95,9 @@ INSERT INTO `folders` VALUES (21, 'Clips', 5, '2024-12-24 23:14:15', '2024-12-24
 INSERT INTO `folders` VALUES (22, 'Projects', 6, '2024-12-24 23:14:15', '2024-12-24 23:14:15');
 INSERT INTO `folders` VALUES (23, 'Clients', 6, '2024-12-24 23:14:15', '2024-12-24 23:14:15');
 INSERT INTO `folders` VALUES (24, 'Documents', 6, '2024-12-24 23:14:15', '2024-12-24 23:14:15');
+INSERT INTO `folders` VALUES (25, 'SUB REPORT', 7, '2024-12-26 02:52:40', '2024-12-26 02:52:40');
+INSERT INTO `folders` VALUES (26, 'IN PROJECT', 22, '2024-12-26 04:36:47', '2024-12-26 04:36:47');
+INSERT INTO `folders` VALUES (27, 'INTI PROJECT 1', 26, '2024-12-26 04:37:19', '2024-12-26 04:37:19');
+INSERT INTO `folders` VALUES (28, 'IN PROJECT 2', 22, '2024-12-26 16:37:10', '2024-12-26 16:37:10');
 
 SET FOREIGN_KEY_CHECKS = 1;
