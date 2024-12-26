@@ -1,6 +1,6 @@
 <template>
   <div class="folder-panel">
-    <search-bar placeholder="Search Folders" @search="handleSearch" />
+    <h3> EXPLORER</h3>
     <ul>
       <folder-item
         v-for="folder in filteredFolders"
